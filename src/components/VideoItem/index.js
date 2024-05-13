@@ -1,0 +1,64 @@
+import {Link} from 'react-router-dom'
+import {
+  VideoItemList,
+  ThumbnailImage,
+  ProfileImage,
+  ThumbnailContent,
+  ThumbnailTitle,
+  Name,
+  ThumbnailViewsYearsContainer,
+} from './styledComponents'
+import {BsDot} from 'react-icons/bs'
+import TimeAgo from 'react-timeago'
+import frenchStrings from 'react-timeago/lib/language-strings/fr'
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
+
+import NxtWatchContext from '../../NxtWatchContext'
+
+const VideoItem = props => {
+  const {eachVideo} = props
+  const {channel} = eachVideo
+  const updatedChannel = {
+    name: channel.name,
+    profileImageUrl: channel.profile_image_url,
+  }
+
+  return (
+    <NxtWatchContext.Consumer>
+      {value => {
+        const {isDarkTheme} = value
+        return (
+          <Link to={`videos/${eachVideo.id}`} style={{textDecoration:'none'}} >
+            <VideoItemList>
+              <ThumbnailImage
+                src={eachVideo.thumbnailUrl}
+                alt="video thumbnail"
+              />
+              <ThumbnailContent>
+                <ProfileImage
+                  src={updatedChannel.profileImageUrl}
+                  alt="channel logo"
+                />
+                <div>
+                  <ThumbnailTitle isDarkTheme={isDarkTheme}>
+                    {eachVideo.title}
+                  </ThumbnailTitle>
+                  <Name>{updatedChannel.name}</Name>
+                  <ThumbnailViewsYearsContainer>
+                    <p>{eachVideo.viewCount} views</p>
+                    <BsDot />
+                    <p>
+                      <TimeAgo date={eachVideo.publishedAt} />
+                    </p>
+                  </ThumbnailViewsYearsContainer>
+                </div>
+              </ThumbnailContent>
+            </VideoItemList>
+          </Link>
+        )
+      }}
+    </NxtWatchContext.Consumer>
+  )
+}
+
+export default VideoItem
